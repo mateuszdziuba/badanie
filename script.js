@@ -1,5 +1,5 @@
 const lists = [
-  'lotnisko'
+  'lotnisko',
   // 'wypadek',
   // 'areszt',
   // 'sniadanie'
@@ -29,16 +29,16 @@ const lists = [
   // 'kosz',
   // 'okno',
   // 'spac',
-  // 'czarny',
-  // 'chleb',
-  // 'stopa',
-  // 'owoc',
-  // 'dziewczyna',
-  // 'wysoki',
-  // 'mezczyzna',
-  // 'muzyka',
-  // 'pajak',
-  // 'zlodziej'
+  'czarny',
+  'chleb',
+  'stopa',
+  'owoc',
+  'dziewczyna',
+  'wysoki',
+  'mezczyzna',
+  'muzyka',
+  'pajak',
+  'zlodziej'
 ];
 
 const lotnisko = {
