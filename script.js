@@ -1,9 +1,9 @@
 const lists = [
   'lotnisko',
-  // 'wypadek',
-  // 'areszt',
-  // 'sniadanie'
-  // 'lazienka',
+  'wypadek',
+  'areszt',
+  'sniadanie',
+  'lazienka'
   // 'kasyno',
   // 'koncert',
   // 'gospodarstwo',
@@ -29,16 +29,16 @@ const lists = [
   // 'kosz',
   // 'okno',
   // 'spac',
-  'czarny',
-  'chleb',
-  'stopa',
-  'owoc',
-  'dziewczyna',
-  'wysoki',
-  'mezczyzna',
-  'muzyka',
-  'pajak',
-  'zlodziej'
+  // 'czarny',
+  // 'chleb',
+  // 'stopa',
+  // 'owoc',
+  // 'dziewczyna',
+  // 'wysoki',
+  // 'mezczyzna',
+  // 'muzyka',
+  // 'pajak',
+  // 'zlodziej'
 ];
 
 const lotnisko = {
@@ -970,7 +970,8 @@ const randomList = () => {
 // wyswietlanie listy
 
 const showList = list => {
-  document.getElementById('button').style.display = 'none';
+  document.getElementById('button').style.visibility = 'hidden';
+  document.getElementById('test').style.visibility = 'hidden';
   let index = 0;
   const interval = setInterval(() => {
     document.getElementById('text').innerHTML = list.words[index++];
@@ -987,9 +988,9 @@ const showList = list => {
           showStats();
           genRaport();
         }
-      }, 10000);
+      }, 45000);
     }
-  }, 250);
+  }, 300);
 };
 
 // mieszanie listy
@@ -1068,9 +1069,11 @@ const checkQuiz = list => {
   chart.push(arr);
 };
 
-const showStats = () => {
-  console.log(chart, totalCorrect, totalCritical, totalError);
-};
+// const showStats = () => {
+//   console.log(chart, totalCorrect, totalCritical, totalError);
+// };
+
+// wyswietlanie kwestionariusza
 
 const genRaport = () => {
   let p1 = document.createElement('p');
@@ -1094,7 +1097,7 @@ const genRaport = () => {
     let checkbox = document.createElement('input');
 
     checkbox.type = 'radio';
-    checkbox.name = 'moods';
+    checkbox.name = 'mood';
     checkbox.id = moods[mood];
     label.htmlFor = moods[mood];
 
@@ -1112,7 +1115,7 @@ const genRaport = () => {
     let checkbox = document.createElement('input');
 
     checkbox.type = 'radio';
-    checkbox.name = 'genders';
+    checkbox.name = 'gender';
     checkbox.id = genders[gender];
     label.htmlFor = genders[gender];
 
@@ -1126,7 +1129,7 @@ const genRaport = () => {
   p3.appendChild(q3);
   age = document.createElement('input');
   age.type = 'number';
-  age.name = 'age';
+  age.id = 'age';
   div3.appendChild(age);
 
   button = document.createElement('button');
@@ -1136,6 +1139,242 @@ const genRaport = () => {
   button.onclick = onClick;
 };
 
+// generowanie pliku z wynikami
+
 onClick = () => {
+  let moods = document.getElementsByName('mood');
+  let mood = '';
+  for (let i = 0; i < moods.length; i++) {
+    if (moods[i].checked) {
+      mood = moods[i].id;
+      break;
+    }
+  }
+  let genders = document.getElementsByName('gender');
+  let gender = '';
+  for (let i = 0; i < genders.length; i++) {
+    if (genders[i].checked) {
+      gender = genders[i].id;
+      break;
+    }
+  }
+  let age = document.getElementById('age').value;
   document.getElementById('quiz').innerHTML = 'Dziękuję za udział w badaniu!';
+  function SaveAsFile(t, f, m) {
+    try {
+      var b = new Blob([t], { type: m });
+      saveAs(b, f);
+    } catch (e) {
+      window.open('data:' + m + ',' + encodeURIComponent(t), '_blank', '');
+    }
+  }
+  let result = '';
+  for (element in chart) {
+    result += chart[element] + '\r\n';
+  }
+
+  SaveAsFile(
+    'Nastrój: ' +
+      mood +
+      '\r\n' +
+      'Płeć: ' +
+      gender +
+      '\r\n' +
+      'Wiek: ' +
+      age +
+      '\r\n' +
+      '\r\n' +
+      'Wynik badania: ' +
+      '\r\n' +
+      result +
+      '\r\n' +
+      'Wybrane pozytywne: ' +
+      totalCorrect +
+      '\r\n' +
+      'Wybrane przynęty krytyczne: ' +
+      totalCritical +
+      '\r\n' +
+      'Wybrane przynęty błędne: ' +
+      totalError,
+    'Raport' + mood + age + gender[1] + '.txt',
+    'text/plain;charset=utf-8'
+  );
 };
+
+const showTestList = list => {
+  document.getElementById('test').style.visibility = 'hidden';
+  document.getElementById('button').style.visibility = 'hidden';
+  let index = 0;
+  const interval = setInterval(() => {
+    document.getElementById('text').innerHTML = list.words[index++];
+    if (index == list.words.length) {
+      clearInterval(interval);
+      document.getElementById('text').innerHTML = '';
+      genQuiz(list);
+      setTimeout(() => {
+        document.getElementById('quiz').innerHTML = '';
+        document.getElementById('button').style.visibility = 'visible';
+      }, 45000);
+    }
+  }, 300);
+};
+
+filesaver.js;
+
+var saveAs =
+  saveAs ||
+  (function(e) {
+    'use strict';
+    if (
+      typeof e === 'undefined' ||
+      (typeof navigator !== 'undefined' &&
+        /MSIE [1-9]\./.test(navigator.userAgent))
+    ) {
+      return;
+    }
+    var t = e.document,
+      n = function() {
+        return e.URL || e.webkitURL || e;
+      },
+      r = t.createElementNS('http://www.w3.org/1999/xhtml', 'a'),
+      o = 'download' in r,
+      a = function(e) {
+        var t = new MouseEvent('click');
+        e.dispatchEvent(t);
+      },
+      i = /constructor/i.test(e.HTMLElement) || e.safari,
+      f = /CriOS\/[\d]+/.test(navigator.userAgent),
+      u = function(t) {
+        (e.setImmediate || e.setTimeout)(function() {
+          throw t;
+        }, 0);
+      },
+      s = 'application/octet-stream',
+      d = 1e3 * 40,
+      c = function(e) {
+        var t = function() {
+          if (typeof e === 'string') {
+            n().revokeObjectURL(e);
+          } else {
+            e.remove();
+          }
+        };
+        setTimeout(t, d);
+      },
+      l = function(e, t, n) {
+        t = [].concat(t);
+        var r = t.length;
+        while (r--) {
+          var o = e['on' + t[r]];
+          if (typeof o === 'function') {
+            try {
+              o.call(e, n || e);
+            } catch (a) {
+              u(a);
+            }
+          }
+        }
+      },
+      p = function(e) {
+        if (
+          /^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(
+            e.type
+          )
+        ) {
+          return new Blob([String.fromCharCode(65279), e], { type: e.type });
+        }
+        return e;
+      },
+      v = function(t, u, d) {
+        if (!d) {
+          t = p(t);
+        }
+        var v = this,
+          w = t.type,
+          m = w === s,
+          y,
+          h = function() {
+            l(v, 'writestart progress write writeend'.split(' '));
+          },
+          S = function() {
+            if ((f || (m && i)) && e.FileReader) {
+              var r = new FileReader();
+              r.onloadend = function() {
+                var t = f
+                  ? r.result
+                  : r.result.replace(/^data:[^;]*;/, 'data:attachment/file;');
+                var n = e.open(t, '_blank');
+                if (!n) e.location.href = t;
+                t = undefined;
+                v.readyState = v.DONE;
+                h();
+              };
+              r.readAsDataURL(t);
+              v.readyState = v.INIT;
+              return;
+            }
+            if (!y) {
+              y = n().createObjectURL(t);
+            }
+            if (m) {
+              e.location.href = y;
+            } else {
+              var o = e.open(y, '_blank');
+              if (!o) {
+                e.location.href = y;
+              }
+            }
+            v.readyState = v.DONE;
+            h();
+            c(y);
+          };
+        v.readyState = v.INIT;
+        if (o) {
+          y = n().createObjectURL(t);
+          setTimeout(function() {
+            r.href = y;
+            r.download = u;
+            a(r);
+            h();
+            c(y);
+            v.readyState = v.DONE;
+          });
+          return;
+        }
+        S();
+      },
+      w = v.prototype,
+      m = function(e, t, n) {
+        return new v(e, t || e.name || 'download', n);
+      };
+    if (typeof navigator !== 'undefined' && navigator.msSaveOrOpenBlob) {
+      return function(e, t, n) {
+        t = t || e.name || 'download';
+        if (!n) {
+          e = p(e);
+        }
+        return navigator.msSaveOrOpenBlob(e, t);
+      };
+    }
+    w.abort = function() {};
+    w.readyState = w.INIT = 0;
+    w.WRITING = 1;
+    w.DONE = 2;
+    w.error = w.onwritestart = w.onprogress = w.onwrite = w.onabort = w.onerror = w.onwriteend = null;
+    return m;
+  })(
+    (typeof self !== 'undefined' && self) ||
+      (typeof window !== 'undefined' && window) ||
+      this.content
+  );
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports.saveAs = saveAs;
+} else if (
+  typeof define !== 'undefined' &&
+  define !== null &&
+  define.amd !== null
+) {
+  define('FileSaver.js', function() {
+    return saveAs;
+  });
+}
