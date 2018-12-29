@@ -20,6 +20,11 @@ body {
   position: absolute
 }
 
+input {
+  height: 50px;
+  width: 50px;
+}
+
 #quiz {
   color: white;
   font-family: "Arial", sans-serif;
